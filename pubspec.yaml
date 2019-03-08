@@ -30,6 +30,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   # 引入网络库 Dio
   dio: 2.0.9
+  # 引入轮播图库
+  flutter_swiper : ^1.1.4
 
 # 开发和测试阶段需要使用的库或者插件
 dev_dependencies:

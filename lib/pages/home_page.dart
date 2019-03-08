@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../service/service_method.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -13,11 +15,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     
     // 获取首页数据
-    getHomePageContent().then((value){
-      setState(() {
-        homePageContent = value.toString();
-      });
-    });
+    // getHomePageContent().then((value){
+    //   setState(() {
+    //     homePageContent = value.toString();
+    //   });
+    // });
 
     super.initState();
   }
@@ -28,10 +30,55 @@ class _HomePageState extends State<HomePage> {
        child: Scaffold(
          appBar: AppBar(title: Text('百姓生活+'),),
          // SingleChildScrollView 与 list 会有冲突，使用时需要注意
-         body: SingleChildScrollView(
-           child: Text(homePageContent),
-         ),
+         body: FutureBuilder( // 可以完美解决异步数据加载实时刷新，也不用调用setState
+            future: getHomePageContent(), // 异步方法
+            builder: (context, snapshop) { // 两个参数，上下文，和 异步方法的返回值
+              if (snapshop.hasData) {
+                var data = json.decode(snapshop.data.toString());
+                List<Map> swiper = (data['data']['slides'] as List).cast();
+                return Column(
+                  children: <Widget>[
+                    SwiperDiy(swiperDataList: swiper)
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Text('加载中...'),
+                );
+              }
+            },
+         )
        ),
     );
+  }
+}
+
+// 首页轮播 widget
+class SwiperDiy extends StatelessWidget {
+
+  final List swiperDataList;
+
+  // 官方推荐写法
+  SwiperDiy({Key key, this.swiperDataList}) : super(key: key);
+
+  // 简化写法
+  // SwiperDiy(this.swiperDataList);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 333.0,
+        child: Swiper(
+          itemBuilder: (BuildContext context, int index) {
+            return Image.network(
+              "${swiperDataList[index]['image']}", 
+              fit: BoxFit.fill,
+              );
+          },
+          itemCount: swiperDataList.length,
+          pagination: SwiperPagination(), // 是否有导航器
+          autoplay: true, // 是否自动播放
+        ),
+      );
   }
 }
