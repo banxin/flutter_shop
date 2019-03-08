@@ -49,10 +49,17 @@ class _HomePageState extends State<HomePage> {
                 // 门洞导航数据
                 List<Map> navigatorList = (data['data']['category'] as List).cast();
 
+                // 广告图片数据
+                String advertesPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
+
                 return Column(
                   children: <Widget>[
+                    // 轮播图
                     SwiperDiy(swiperDataList: swiper),
-                    TopNavigator(navitatorList: navigatorList,)
+                    // 门洞导航
+                    TopNavigator(navitatorList: navigatorList,),
+                    // 广告图
+                    AdBanner(advertesPicture:advertesPicture)
                   ],
                 );
               } else {
@@ -143,5 +150,21 @@ class TopNavigator extends StatelessWidget {
           }).toList(),
         ),
       );
+  }
+}
+
+// 广告 banner （其实就是一张由服务端返回的图片）
+class AdBanner extends StatelessWidget {
+
+  // 图片链接
+  final String advertesPicture;
+
+  AdBanner({Key key, this.advertesPicture}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Image.network(advertesPicture),
+    );
   }
 }
