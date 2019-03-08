@@ -9,6 +9,8 @@ import 'package:flutter_shop/pages/category_page.dart';
 import 'package:flutter_shop/pages/cart_page.dart';
 import 'package:flutter_shop/pages/member_page.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class IndexPage extends StatefulWidget {
 
 //  @override
@@ -65,6 +67,14 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // 初始化适配器
+    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+
+    // 放到初始化适配器之前
+    print('设备的像素密度：${ScreenUtil.pixelRatio}');
+    print('设备的高：${ScreenUtil.screenHeight}');
+    print('设备的宽：${ScreenUtil.screenWidth}');
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),

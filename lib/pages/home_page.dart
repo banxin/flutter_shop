@@ -40,11 +40,19 @@ class _HomePageState extends State<HomePage> {
             future: getHomePageContent(), // 异步方法
             builder: (context, snapshop) { // 两个参数，上下文，和 异步方法的返回值
               if (snapshop.hasData) {
+
                 var data = json.decode(snapshop.data.toString());
+
+                // 轮播图数据
                 List<Map> swiper = (data['data']['slides'] as List).cast();
+
+                // 门洞导航数据
+                List<Map> navigatorList = (data['data']['category'] as List).cast();
+
                 return Column(
                   children: <Widget>[
-                    SwiperDiy(swiperDataList: swiper)
+                    SwiperDiy(swiperDataList: swiper),
+                    TopNavigator(navitatorList: navigatorList,)
                   ],
                 );
               } else {
@@ -72,15 +80,6 @@ class SwiperDiy extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    // 初始化适配器
-    ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
-
-    // 放到初始化适配器之前
-    print('设备的像素密度：${ScreenUtil.pixelRatio}');
-    print('设备的高：${ScreenUtil.screenHeight}');
-    print('设备的宽：${ScreenUtil.screenWidth}');
-
     return Container(
         // 使用 ScreenUtil 设置宽高进行适配
         height: ScreenUtil().setHeight(333),
@@ -95,6 +94,53 @@ class SwiperDiy extends StatelessWidget {
           itemCount: swiperDataList.length,
           pagination: SwiperPagination(), // 是否有导航器
           autoplay: true, // 是否自动播放
+        ),
+      );
+  }
+}
+
+// 顶部门洞导航
+class TopNavigator extends StatelessWidget {
+
+  final List navitatorList;
+
+  TopNavigator({Key key, this.navitatorList}) : super(key: key);
+
+  // 获取门洞导航的 Item
+  Widget _grideItemWidget(BuildContext context, item) {
+    return InkWell(
+      onTap: () {
+        print('点击了门洞导航~~~~~~~~~~');
+      },
+      child: Column(
+        children: <Widget>[
+          Image.network(
+            item['image'], 
+            width: ScreenUtil().setWidth(95),
+          ),
+          Text(item['mallCategoryName'])
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    // 如果大于 10 条数据，移除超出的数据
+    if (this.navitatorList.length > 10) {
+      this.navitatorList.removeRange(10, this.navitatorList.length);
+    }
+
+    return Container(
+        height: ScreenUtil().setHeight(320),
+        padding: EdgeInsets.all(3.0),
+        child: GridView.count(
+          crossAxisCount: 5,
+          padding: EdgeInsets.all(5.0),
+          children: navitatorList.map((item) {
+            return _grideItemWidget(context, item);
+          }).toList(),
         ),
       );
   }
