@@ -32,6 +32,8 @@ dependencies:
   dio: 2.0.9
   # 引入轮播图库
   flutter_swiper : ^1.1.4
+  # 屏幕适配库
+  flutter_screenutil: ^0.5.1
 
 # 开发和测试阶段需要使用的库或者插件
 dev_dependencies:
