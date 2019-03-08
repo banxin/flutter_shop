@@ -8,6 +8,7 @@ import '../service/service_method.dart';
 // 三方库
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
@@ -52,6 +53,11 @@ class _HomePageState extends State<HomePage> {
                 // 广告图片数据
                 String advertesPicture = data['data']['advertesPicture']['PICTURE_ADDRESS'];
 
+                // 店长图片
+                String  leaderImage = data['data']['shopInfo']['leaderImage']; 
+                // 店长电话  
+                String  leaderPhone = data['data']['shopInfo']['leaderPhone']; 
+
                 return Column(
                   children: <Widget>[
                     // 轮播图
@@ -59,7 +65,9 @@ class _HomePageState extends State<HomePage> {
                     // 门洞导航
                     TopNavigator(navitatorList: navigatorList,),
                     // 广告图
-                    AdBanner(advertesPicture:advertesPicture)
+                    AdBanner(advertesPicture:advertesPicture),
+                    // 店长组件
+                    ShopLeaderPhone(leaderImage:leaderImage,leaderPhone: leaderPhone)  
                   ],
                 );
               } else {
@@ -168,3 +176,46 @@ class AdBanner extends StatelessWidget {
     );
   }
 }
+
+// 店长 widget
+class ShopLeaderPhone extends StatelessWidget {
+
+  // 店长图片
+  final String leaderImage; 
+  // 店长电话
+  final String leaderPhone; 
+
+  ShopLeaderPhone({Key key, this.leaderImage, this.leaderPhone}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        onTap: () {
+          _lanuchURL();
+        },
+        child: Image.network(leaderImage),
+      ),
+    );
+  }
+
+  /* 私有方法 */ 
+
+  // 拨打电话
+  void _lanuchURL() async {
+
+    // iOS端，这里有 bug ，会弹出两次打电话的对话框
+    String url = 'tel:' + leaderPhone;
+
+    // 也可以打开 网页链接
+    // String url = 'http://www.baidu.com';
+
+    // 是否能打开url
+    if (await launch(url)) {
+      await launch(url);
+    } else {
+      throw 'Url 不能访问，异常~~';
+    }
+  }
+}
+
