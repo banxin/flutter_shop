@@ -14,17 +14,36 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
   String homePageContent = '正在获取数据';
+
+  /*
+  保持页面设置
+
+  AutomaticKeepAliveClientMixin
+  AutomaticKeepAliveClientMixin这个Mixin就是Flutter为了保持页面设置的。哪个页面需要保持页面状态，就在这个页面进行混入。
+
+  不过使用使用这个Mixin是有几个先决条件的：
+
+  使用的页面必须是StatefulWidget,如果是StatelessWidget是没办法办法使用的。
+  其实只有两个前置组件才能保持页面状态：PageView和IndexedStack。
+  重写wantKeepAlive方法，如果不重写也是实现不了的。
+  */
+  @override
+  bool get wantKeepAlive =>true;
 
   @override
   void initState() {
+
     // 获取首页数据
     // getHomePageContent().then((value){
     //   setState(() {
     //     homePageContent = value.toString();
     //   });
     // });
+
+    print('111111111111111111111111111');
 
     super.initState();
   }

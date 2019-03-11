@@ -25,7 +25,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
 
-  // 底部导航按钮s
+  // 底部导航按钮
   final List<BottomNavigationBarItem> bottomTabs = [
     BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.home),
@@ -46,7 +46,7 @@ class _IndexPageState extends State<IndexPage> {
   ];
 
   // 导航页面
-  final List tabPages = [
+  final List<Widget> tabPages = [
     HomePage(),
     CategoryPage(),
     CartPage(),
@@ -72,9 +72,9 @@ class _IndexPageState extends State<IndexPage> {
     ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
 
     // 放到初始化适配器之前
-    print('设备的像素密度：${ScreenUtil.pixelRatio}');
-    print('设备的高：${ScreenUtil.screenHeight}');
-    print('设备的宽：${ScreenUtil.screenWidth}');
+    // print('设备的像素密度：${ScreenUtil.pixelRatio}');
+    // print('设备的高：${ScreenUtil.screenHeight}');
+    // print('设备的宽：${ScreenUtil.screenWidth}');
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(244, 245, 245, 1.0),
@@ -91,7 +91,10 @@ class _IndexPageState extends State<IndexPage> {
           });
         },
       ),
-      body: currentPage,
+      body: IndexedStack(
+        index: currentIndex,
+        children: tabPages,
+      )
     );
   }
 }
